@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Library</title>
+    <style>
+        .button {
+            color: black;
+            text-decoration: none;
+        }
+        table, th, td, tr {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        td, th {
+            padding: 5px;
+            align-content: center;
+            text-align: center;
+        }
+        th {
+            background-color: darkseagreen;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Book Library</h1>
+
+<p><a href="/new">Add Book</a></p>
+
+<table>
+    <tr>
+        <th>ISBN</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Pages</th>
+        <th>Genre</th>
+        <th>Actions</th>
+    </tr>
+
+    <tr th:each="book : ${books}">
+        <td th:text="${book.isbn}"></td>
+        <td th:text="${book.title}"></td>
+        <td th:text="${book.author}"></td>
+        <td th:text="${book.numOfPages}"></td>
+        <td th:text="${book.genre}"></td>
+
+        <td>
+            <button><a th:href="@{/edit/{isbn}(isbn=${book.isbn})}" class="button">Edit Details</a></button>
+            <br>
+            <button><a th:href="@{/delete/{isbn}(isbn=${book.isbn})}" class="button">Delete Book</a></button>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>
