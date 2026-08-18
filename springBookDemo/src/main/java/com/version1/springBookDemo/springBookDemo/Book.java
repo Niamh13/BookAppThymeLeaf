@@ -1,17 +1,27 @@
 package com.version1.springBookDemo.springBookDemo;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "books")
 public class Book {
 
     @Id
+    @NotBlank(message = "ISBN is required")
     private String isbn;
 
+    @NotBlank(message = "Author is required")
     private String author;
+
+    @NotBlank(message = "Title is required")
     private String title;
+
+    @Min(value = 1, message ="Pages must be at least 1")
     private int numOfPages;
+
+    @NotBlank(message = "Genre is required")
     private String genre;
 
     public Book() {

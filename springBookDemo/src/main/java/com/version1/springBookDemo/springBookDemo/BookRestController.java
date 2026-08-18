@@ -35,6 +35,11 @@ public class BookRestController {
         return service.updateBook(isbn, book);
     }
 
+    @GetMapping("/search")
+    public List<Book> searchBooks(@RequestParam(required = false) String query) {
+        return service.searchBooks(query);
+    }
+
     @DeleteMapping("/{isbn}")
     public void deleteBook(@PathVariable String isbn) {
         service.deleteBook(isbn);

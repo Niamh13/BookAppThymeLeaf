@@ -33,4 +33,13 @@ public class BookService {
     public void deleteBook(String isbn) {
         repository.deleteById(isbn);
     }
+
+    public List<Book> searchBooks(String query) {
+        if (query == null || query.isBlank()) {
+            return getAllBooks();
+        }
+        return repository.findByTitleContainingIgnoreCaseOrAuthorContainingIgnoreCaseOrGenreContainingIgnoreCase(
+                query, query, query
+        );
+    }
 }

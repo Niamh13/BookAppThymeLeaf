@@ -10,21 +10,31 @@
 <form action="#" th:action="@{/save}" th:object="${book}" method="post" >
     <label>Title:</label>
     <input type="text" th:field="*{title}" />
+    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" style="color:#ff0000;"></span>
     <br>
+
     <label>Author:</label>
     <input type="text" th:field="*{author}" />
+    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}" style="color:#2fff00;"></span>
     <br>
+
     <label>Number of Pages:</label>
     <input type="number" th:field="*{numOfPages}" />
+    <span th:if="${#fields.hasErrors('numOfPages')}" th:errors="*{numOfPages}" style="color:#0048ff;"></span>
     <br>
+
     <label>Genre:</label>
     <input type="text" th:field="*{genre}" />
+    <span th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}" style="color:#ff00f2;"></span>
     <br>
+
     <label>ISBN:</label>
-    <input type="text" th:field="*{isbn}" />
-
-<button type="submit" value="Add User">Save</button>
-
+    <input type="text" th:field="*{isbn}" th:if="${!isEdit}" />
+    <span th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}" style="color:#00e1ff;"></span>
+    <span th:if="${isEdit}" th:text="${book.isbn}"></span>
+    <input type="hidden" th:field="*{isbn}" th:if="${isEdit}" />
+    <br>
+    <button type="submit" value="Add User">Save</button>
 </form>
 
 </body>

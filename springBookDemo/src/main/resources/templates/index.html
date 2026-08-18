@@ -6,6 +6,13 @@
         .button {
             color: black;
             text-decoration: none;
+            display: inline-block;
+            background-color: lightgray;
+            padding: 4px 8px;
+            margin-bottom: 3px;
+            margin-top: 3px;
+            border: 1px solid black;
+            border-radius: 3px;
         }
         table, th, td, tr {
             border: 1px solid black;
@@ -24,7 +31,7 @@
 <body>
 
 <h1>Book Library</h1>
-
+<input type="text" id="searchBox" placeholder="Search title, author, or genre..." style="padding:5px; width:250px;" />
 <p><a href="/new">Add Book</a></p>
 
 <table>
@@ -37,6 +44,7 @@
         <th>Actions</th>
     </tr>
 
+    <tbody id="bookRows">
     <tr th:each="book : ${books}">
         <td th:text="${book.isbn}"></td>
         <td th:text="${book.title}"></td>
@@ -45,12 +53,55 @@
         <td th:text="${book.genre}"></td>
 
         <td>
-            <button><a th:href="@{/edit/{isbn}(isbn=${book.isbn})}" class="button">Edit Details</a></button>
+            <a th:href="@{/edit/{isbn}(isbn=${book.isbn})}" class="button">Edit Details</a>
             <br>
-            <button><a th:href="@{/delete/{isbn}(isbn=${book.isbn})}" class="button">Delete Book</a></button>
+            <form th:action="@{/delete/{isbn}(isbn=${book.isbn})}" method="post" style="display:inline;">
+                <button type="submit" class="button">Delete Book</button>
+            </form>
         </td>
     </tr>
+    </tbody>
 </table>
+
+<script th:inline="javascript">
+    const searchBox = document.getElementById('searchBox');
+    const bookRows = document.getElementById('bookRows');
+    let debounceTimer;
+
+    searchBox.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => runSearch(searchBox.value), 300);
+    });
+
+    function runSearch(query) {
+        fetch('/api/books/search?query=' + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(books => renderRows(books))
+            .catch(err => console.error('Search failed:', err));
+    }
+
+    function renderRows(books) {
+        bookRows.innerHTML = '';
+        books.forEach(book => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${book.isbn}</td>
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.numOfPages}</td>
+                <td>${book.genre}</td>
+                <td>
+                    <a href="/edit/${book.isbn}" class="button">Edit Details</a>
+                    <br><div style="margin-bottom: 5px;"></div>
+                    <form action="/delete/${book.isbn}" method="post" style="display:inline;">
+                        <button type="submit" class="button">Delete Book</button>
+                    </form>
+                </td>
+            `;
+            bookRows.appendChild(row);
+        });
+    }
+</script>
 
 </body>
 </html>
